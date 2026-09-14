@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIRNOY Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+
+  <div class="calculator" id="calculator">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="brand">N I <span>R N </span>O Y</div>
+      <div class="header-controls">
+        <!-- Sound Mute Button -->
+        <button class="sound-btn" id="soundBtn" title="Toggle Sound">
+          <svg id="soundIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
+        <!-- Mode Toggle -->
+        <div class="mode-toggle basic" id="modeToggle" title="Switch Mode">
+          <div class="thumb"></div>
+          <div class="labels">
+            <span>Basic</span>
+            <span>Sci</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISPLAY -->
+    <div class="display">
+      <div class="expression" id="expression">&nbsp;</div>
+      <div class="current" id="current">0</div>
+    </div>
+
+    <!-- KEYPAD WRAPPER -->
+    <div class="keys-wrapper" id="keys">
+      
+      <!-- SCIENTIFIC PAD -->
+      <div class="sci-pad" id="sciPad">
+        <button class="key sci-key" data-action="sin">sin</button>
+        <button class="key sci-key" data-action="cos">cos</button>
+        <button class="key sci-key" data-action="tan">tan</button>
+
+        <button class="key sci-key" data-action="sinh">sinh</button>
+        <button class="key sci-key" data-action="cosh">cosh</button>
+        <button class="key sci-key" data-action="tanh">tanh</button>
+
+        <button class="key sci-key" data-action="log">log₁₀</button>
+        <button class="key sci-key" data-action="ln">ln</button>
+        <button class="key sci-key" data-action="e">e</button>
+
+        <button class="key sci-key" data-action="sqr">x²</button>
+        <button class="key sci-key" data-action="cube">x³</button>
+        <button class="key sci-key" data-action="pow">xʸ</button>
+
+        <button class="key sci-key" data-action="sqrt">√x</button>
+        <button class="key sci-key" data-action="cbrt">∛x</button>
+        <button class="key sci-key" data-action="pi">π</button>
+      </div>
+
+      <!-- BASIC PAD -->
+      <div class="basic-pad" id="basicPad">
+        <button class="key function" data-action="clear">AC</button>
+        <button class="key function" data-action="negate">+/-</button>
+        <button class="key function" data-action="percent">%</button>
+        <button class="key operator" data-op="÷">÷</button>
+
+        <button class="key" data-num="7">7</button>
+        <button class="key" data-num="8">8</button>
+        <button class="key" data-num="9">9</button>
+        <button class="key operator" data-op="×">×</button>
+
+        <button class="key" data-num="4">4</button>
+        <button class="key" data-num="5">5</button>
+        <button class="key" data-num="6">6</button>
+        <button class="key operator" data-op="−">−</button>
+
+        <button class="key" data-num="1">1</button>
+        <button class="key" data-num="2">2</button>
+        <button class="key" data-num="3">3</button>
+        <button class="key operator" data-op="+">+</button>
+
+        <button class="key zero" data-num="0">0</button>
+        <button class="key" data-action="decimal">.</button>
+        <button class="key equals" data-action="equals">=</button>
+      </div>
+
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
