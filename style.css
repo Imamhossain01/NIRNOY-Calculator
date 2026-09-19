@@ -16,29 +16,45 @@
   --text-primary: #f8f1f1;
   --text-dim:     rgba(248, 241, 241, 0.45);
   --shadow-deep:  0 30px 80px rgba(0, 0, 0, 0.7);
+
+  /* Responsive sizing tokens (overridden in media queries) */
+  --calc-w:       340px;
+  --calc-w-sci:   590px;
+  --calc-pad:     22px;
+  --calc-radius:  36px;
+  --gap:          11px;
+  --key-h:        60px;
+  --key-font:     21px;
+  --sci-font:     15px;
+  --disp-font:    48px;
+  --disp-shrink:  30px;
+  --disp-shrink2: 22px;
+  --disp-min-h:   104px;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body {
-  height: 100%;
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
+html { height: 100%; }
 
 body {
   display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  touch-action: manipulation;
   background:
     radial-gradient(circle at 18% 20%, rgba(148, 37, 57, 0.15), transparent 42%),
     radial-gradient(circle at 82% 78%, rgba(223, 180, 151, 0.12), transparent 45%),
     radial-gradient(circle at 50% 100%, rgba(68, 14, 24, 0.25), transparent 60%),
     linear-gradient(160deg, var(--bg-indigo) 0%, var(--bg-violet) 45%, var(--bg-base) 100%);
   background-attachment: fixed;
-  padding: 10px;
+  padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
 }
 
 /* Ambient glow orbs */
@@ -59,9 +75,11 @@ body {
 .calculator {
   position: relative;
   z-index: 1;
-  width: 340px;
-  padding: 22px;
-  border-radius: 36px;
+  width: var(--calc-w);
+  max-width: 100%;
+  margin: auto;                 /* centres safely; allows scrolling if too tall */
+  padding: var(--calc-pad);
+  border-radius: var(--calc-radius);
   background: linear-gradient(155deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
   backdrop-filter: blur(35px) saturate(140%);
   -webkit-backdrop-filter: blur(35px) saturate(140%);
@@ -74,7 +92,7 @@ body {
 }
 
 .calculator.sci-mode {
-  width: 590px;
+  width: var(--calc-w-sci);
 }
 
 /* ---------- Header ---------- */
@@ -82,6 +100,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   padding: 2px 6px 18px 6px;
 }
 .brand {
@@ -89,6 +108,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.16em;
   color: var(--text-dim);
+  white-space: nowrap;
 }
 .brand span { color: var(--accent-gold); }
 
@@ -102,6 +122,7 @@ body {
 .sound-btn {
   width: 30px;
   height: 30px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.06);
@@ -121,12 +142,14 @@ body {
   display: flex;
   width: 110px;
   height: 30px;
+  flex-shrink: 0;
   padding: 3px;
   border-radius: 16px;
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.06);
   cursor: pointer;
   user-select: none;
+  -webkit-user-select: none;
 }
 .mode-toggle .thumb {
   position: absolute;
@@ -162,11 +185,12 @@ body {
 .display {
   padding: 10px 14px 18px 14px;
   text-align: right;
-  min-height: 104px;
+  min-height: var(--disp-min-h);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   gap: 6px;
+  min-width: 0;
 }
 .expression {
   font-size: 15px;
@@ -174,20 +198,21 @@ body {
   color: var(--text-dim);
   min-height: 18px;
   letter-spacing: 0.02em;
-  word-break: break-all;
+  overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
 }
 .current {
-  font-size: 48px;
+  font-size: var(--disp-font);
   font-weight: 300;
   color: var(--text-primary);
   letter-spacing: -0.02em;
   line-height: 1.1;
-  word-break: break-all;
+  overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
   transition: font-size 0.2s ease;
 }
-.current.shrink { font-size: 30px; }
+.current.shrink      { font-size: var(--disp-shrink); }
+.current.shrink-more { font-size: var(--disp-shrink2); }
 
 /* ---------- Keypad Wrapper ---------- */
 .keys-wrapper {
@@ -203,14 +228,14 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  gap: 11px;
+  gap: var(--gap);
   padding-right: 0;
   pointer-events: none;
   transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.4s;
   flex-shrink: 0;
 }
 .calculator.sci-mode .sci-pad {
-  width: 235px;
+  width: 43%;
   padding-right: 16px;
   opacity: 1;
   visibility: visible;
@@ -218,22 +243,23 @@ body {
 }
 
 .basic-pad {
-  width: 294px;
+  flex: 1 1 0;
+  min-width: 0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  gap: 11px;
-  flex-shrink: 0;
+  gap: var(--gap);
 }
 
 /* ---------- Buttons & Softened Glow ---------- */
 .key {
   position: relative;
-  height: 60px;
+  min-width: 0;
+  height: var(--key-h);
   border: none;
   border-radius: 18px;
   font-family: inherit;
-  font-size: 21px;
+  font-size: var(--key-font);
   font-weight: 500;
   color: var(--text-primary);
   background: var(--glass);
@@ -246,11 +272,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.2s ease;
 }
 
 .key:hover { background: var(--glass-strong); }
 .key:active { transform: scale(0.92); }
+.key:focus-visible,
+.sound-btn:focus-visible,
+.mode-toggle:focus-visible { outline: 2px solid var(--accent-gold); outline-offset: 2px; }
 
 .ripple {
   position: absolute;
@@ -265,7 +295,7 @@ body {
 }
 
 .key.sci-key {
-  font-size: 15px;
+  font-size: var(--sci-font);
   color: rgba(248, 241, 241, 0.85);
   background: rgba(255,255,255,0.02);
 }
@@ -291,39 +321,106 @@ body {
 }
 .key.zero { grid-column: span 2; justify-content: flex-start; padding-left: 28px; }
 
-/* Responsive Media Queries for Mobile Screens */
-@media (max-width: 630px) {
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+/* ---- Large screens / tablets & desktops with room: scale up ---- */
+@media (min-width: 900px) and (min-height: 820px) {
+  :root {
+    --calc-w: 400px;  --calc-w-sci: 700px;
+    --calc-pad: 26px; --gap: 13px;
+    --key-h: 70px;    --key-font: 24px;  --sci-font: 17px;
+    --disp-font: 56px; --disp-shrink: 36px; --disp-shrink2: 26px;
+    --disp-min-h: 120px;
+  }
+}
+@media (min-width: 1400px) and (min-height: 1000px) {
+  :root {
+    --calc-w: 460px;  --calc-w-sci: 800px;
+    --calc-pad: 30px; --gap: 15px;
+    --key-h: 80px;    --key-font: 28px;  --sci-font: 19px;
+    --disp-font: 64px; --disp-shrink: 42px; --disp-shrink2: 30px;
+    --disp-min-h: 136px;
+  }
+}
+
+/* ---- Phones & small windows: full-width floating card ---- */
+@media (max-width: 640px) {
+  :root {
+    --calc-pad: 14px; --gap: 9px;
+    --key-h: clamp(40px, 7.4dvh, 60px);
+    --key-font: 20px; --sci-font: 13px;
+    --disp-font: clamp(38px, 12vw, 52px);
+    --disp-shrink: clamp(26px, 8vw, 34px);
+    --disp-shrink2: clamp(20px, 6vw, 26px);
+    --disp-min-h: 88px;
+  }
   body {
-    padding: 5px;
-    align-items: flex-end;
+    padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+             max(14px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
   }
-  .calculator {
-    width: 100%;
-    max-width: 100%;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    padding: 14px;
-  }
+  .calculator,
   .calculator.sci-mode {
     width: 100%;
+    margin: auto;               /* floats with breathing room on every side */
+    border-radius: 28px;        /* keep all four corners rounded */
+    padding: var(--calc-pad);
   }
-  .calculator.sci-mode .keys-wrapper {
-    flex-direction: column-reverse;
-  }
-  .calculator.sci-mode .sci-pad {
-    width: 100% !important;
-    padding-right: 0 !important;
+  .display { padding: 6px 8px 12px; }
+  .key { border-radius: 16px; }
+  .key.zero { padding-left: 24px; }
+  .calculator.sci-mode .keys-wrapper { flex-direction: column-reverse; }
+  .calculator .sci-pad {
+    height: 0;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(3, 1fr);
+    transition: opacity 0.3s ease;
   }
-  .basic-pad {
+  .calculator.sci-mode .sci-pad {
     width: 100%;
+    height: auto;
+    padding-right: 0;
+    margin-top: var(--gap);
   }
-  .key {
-    height: 52px;
-    font-size: 18px;
+}
+
+/* ---- Very small phones (≤360px wide) ---- */
+@media (max-width: 360px) {
+  :root { --calc-pad: 10px; --gap: 7px; --key-font: 18px; --sci-font: 12px; }
+  .brand { font-size: 11px; letter-spacing: 0.1em; }
+  .mode-toggle { width: 96px; }
+  .mode-toggle .thumb { width: 45px; }
+  .mode-toggle.sci .thumb { transform: translateX(45px); }
+  .key { border-radius: 14px; }
+}
+
+/* ---- Short screens / phones in landscape: compact, side-by-side ---- */
+@media (max-height: 520px) {
+  :root {
+    --calc-pad: 12px; --gap: 7px;
+    --key-h: 38px; --key-font: 17px; --sci-font: 12px;
+    --disp-font: 34px; --disp-shrink: 24px; --disp-shrink2: 18px;
+    --disp-min-h: 60px;
+    --calc-radius: 24px;
   }
-  .key.sci-key {
-    font-size: 12px;
-  }
+  body { padding-top: 8px; padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+  .calculator { width: min(var(--calc-w), 100%); margin: auto; border-radius: var(--calc-radius); }
+  .calculator.sci-mode { width: min(var(--calc-w-sci), 100%); }
+  .header { padding-bottom: 6px; }
+  .display { padding: 0 10px 8px; min-height: var(--disp-min-h); gap: 2px; }
+  .expression { font-size: 12px; min-height: 14px; }
+  .key { border-radius: 12px; }
+  .key.zero { padding-left: 20px; }
+  .orb { opacity: 0.2; }
+
+  /* Undo the stacked sci layout so it stays side-by-side */
+  .calculator.sci-mode .keys-wrapper { flex-direction: row; }
+  .calculator .sci-pad { height: auto; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(5, 1fr); transition: width 0.4s cubic-bezier(0.25,1,0.5,1), opacity 0.3s ease, padding 0.4s; }
+  .calculator.sci-mode .sci-pad { width: 43%; padding-right: 12px; margin-top: 0; }
+}
+
+/* ---- Respect reduced-motion preferences ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
