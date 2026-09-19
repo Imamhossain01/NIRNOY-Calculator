@@ -31,13 +31,14 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 18% 20%, rgba(148, 37, 57, 0.15), transparent 42%),
     radial-gradient(circle at 82% 78%, rgba(223, 180, 151, 0.12), transparent 45%),
     radial-gradient(circle at 50% 100%, rgba(68, 14, 24, 0.25), transparent 60%),
     linear-gradient(160deg, var(--bg-indigo) 0%, var(--bg-violet) 45%, var(--bg-base) 100%);
   background-attachment: fixed;
+  padding: 10px;
 }
 
 /* Ambient glow orbs */
@@ -53,7 +54,7 @@ body {
 .orb-b { width: 320px; height: 320px; background: var(--accent-gold); bottom: -100px; right: -80px; opacity: 0.15; }
 
 /* ============================================================
-   CALCULATOR SHELL (Fixed overflow issue for shadows)
+   CALCULATOR SHELL
    ============================================================ */
 .calculator {
   position: relative;
@@ -69,7 +70,7 @@ body {
     var(--shadow-deep),
     inset 0 1px 0 rgba(255,255,255,0.15),
     inset 0 0 40px rgba(255,255,255,0.03);
-  transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .calculator.sci-mode {
@@ -191,25 +192,28 @@ body {
 /* ---------- Keypad Wrapper ---------- */
 .keys-wrapper {
   display: flex;
-  overflow: visible;
+  overflow: hidden;
   margin-top: 6px;
 }
 
 .sci-pad {
   width: 0;
   opacity: 0;
+  visibility: hidden;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(5, 1fr);
   gap: 11px;
   padding-right: 0;
   pointer-events: none;
-  transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, padding 0.6s;
+  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, padding 0.4s;
+  flex-shrink: 0;
 }
 .calculator.sci-mode .sci-pad {
   width: 235px;
   padding-right: 16px;
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
@@ -239,6 +243,9 @@ body {
     0 4px 10px rgba(0,0,0,0.15);
   cursor: pointer;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.2s ease;
 }
 
@@ -282,8 +289,41 @@ body {
   color: #f8f1f1;
   box-shadow: 0 4px 12px rgba(148, 37, 57, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
 }
-.key.zero { grid-column: span 2; text-align: left; padding-left: 28px; }
+.key.zero { grid-column: span 2; justify-content: flex-start; padding-left: 28px; }
 
-@media (max-width: 620px) { .calculator { transform: scale(0.9); } }
-@media (max-width: 550px) { .calculator { transform: scale(0.75); } }
-@media (max-width: 420px) { .calculator { transform: scale(0.65); } }
+/* Responsive Media Queries for Mobile Screens */
+@media (max-width: 630px) {
+  body {
+    padding: 5px;
+    align-items: flex-end;
+  }
+  .calculator {
+    width: 100%;
+    max-width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 14px;
+  }
+  .calculator.sci-mode {
+    width: 100%;
+  }
+  .calculator.sci-mode .keys-wrapper {
+    flex-direction: column-reverse;
+  }
+  .calculator.sci-mode .sci-pad {
+    width: 100% !important;
+    padding-right: 0 !important;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+  .basic-pad {
+    width: 100%;
+  }
+  .key {
+    height: 52px;
+    font-size: 18px;
+  }
+  .key.sci-key {
+    font-size: 12px;
+  }
+}
