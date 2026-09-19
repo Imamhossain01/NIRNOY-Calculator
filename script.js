@@ -55,7 +55,9 @@
   function updateDisplay() {
     el.expression.textContent = state.expression || '\u00A0';
     el.current.textContent = formatNumber(state.current);
-    el.current.classList.toggle('shrink', el.current.textContent.length > 9);
+    const len = el.current.textContent.length;
+    el.current.classList.toggle('shrink', len > 9 && len <= 13);
+    el.current.classList.toggle('shrink-more', len > 13);
   }
 
   function formatNumber(value) {
