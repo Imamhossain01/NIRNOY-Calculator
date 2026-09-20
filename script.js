@@ -58,19 +58,15 @@
     el.modeToggleBtn.addEventListener('click', () => {
       sciMode = !sciMode;
       
-      // Toggle button classes for sliding effect
       el.modeToggleBtn.classList.toggle('active', sciMode);
       
-      // Toggle text highlight
       const texts = el.modeToggleBtn.querySelectorAll('.switch-text');
       if(texts.length === 2) {
         texts[0].classList.toggle('active', !sciMode);
         texts[1].classList.toggle('active', sciMode);
       }
 
-      // Toggle calculator mode
       el.calculator.classList.toggle('sci-mode', sciMode);
-      
       playClickSound();
     });
   }
@@ -115,7 +111,6 @@
   }
 
   /* ---------------- Expression engine ---------------- */
-  // Use exact Unicode chars to match HTML (Minus = \u2212, Multiply = \u00D7, Divide = \u00F7)
   const OP_CHARS = '+\u2212\u00D7\u00F7^';
   const isOperator = (ch) => OP_CHARS.includes(ch);
   const canPrecedeImplicitMultiply = (ch) => /[0-9)πe]/.test(ch || '');
@@ -128,10 +123,9 @@
       s += ')'.repeat(open - close);
     }
     
-    // Convert math symbols to JavaScript operators
-    s = s.replace(/\u00D7/g, '*') // × to *
-         .replace(/\u00F7/g, '/') // ÷ to /
-         .replace(/\u2212/g, '-') // − to -
+    s = s.replace(/\u00D7/g, '*')
+         .replace(/\u00F7/g, '/')
+         .replace(/\u2212/g, '-')
          .replace(/\^/g, '**')
          .replace(/π/g, 'Math.PI')
          .replace(/e/g, 'Math.E');
@@ -209,7 +203,14 @@
   }
 
   function inputOperator(op) {
-    resetIfJustEvaluated();
+    // Answer thakar por operator dile jeno ager result add hoye jay
+    if (state.justEvaluated) {
+      state.expression = ''; 
+      state.justEvaluated = false;
+      if (state.expr === 'Error') {
+        state.expr = '';
+      }
+    }
     
     if (state.expr === '' || state.expr === 'Error') { 
       if (op === '\u2212') { // Minus
@@ -267,6 +268,12 @@
   }
 
   function percent() {
+    if (state.justEvaluated) {
+      state.expression = '';
+      state.justEvaluated = false;
+      if (state.expr === 'Error') return;
+    }
+
     const m = state.expr.match(/([0-9]*\.?[0-9]+)$/);
     if (!m) {
       return;
